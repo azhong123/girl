@@ -1,19 +1,29 @@
 package com.example.demo;
 
-import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.stereotype.Component;
+import javax.persistence.*;
 
 /**
- * 配置文件 --> application-dev & -prod 中的girl 配置信息实例化
- * Created by Admin on 2017/11/9.
+ * 女孩的实体类
+ * Created by Admin on 2017/11/11.
  */
-@Component
-@ConfigurationProperties(prefix = "girl")
-public class GirlProperties {
+@Entity
+public class Girl {
+
+    @Id
+    @GeneratedValue
+    private Integer id;
 
     private String cupSize;
 
     private Integer age;
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
 
     public String getCupSize() {
         return cupSize;
@@ -29,5 +39,8 @@ public class GirlProperties {
 
     public void setAge(Integer age) {
         this.age = age;
+    }
+
+    public Girl() {
     }
 }
