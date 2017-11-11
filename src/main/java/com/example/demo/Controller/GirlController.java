@@ -1,9 +1,13 @@
-package com.example.demo;
+package com.example.demo.Controller;
 
-import jdk.nashorn.internal.ir.ReturnNode;
+import com.example.demo.Repository.GirlRepository;
+import com.example.demo.Service.GirlService;
+import com.example.demo.utill.Girl;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 
 /**
@@ -98,5 +102,24 @@ public class GirlController {
     @PostMapping(value = "/savegirltwo")
     public void saveGirlTwo(){
         girlService.saveGirlTwo();
+    }
+
+    /**
+     * 验证用户上传的信息，是否是满足程序设计  通过注解 @Valid
+     *
+     * @param girl Girl对象
+     * @param bindingResult 提示信息
+     * @return
+     */
+    @PostMapping(value = "/savegirlvaild")
+    public Girl saveGirlValid(@Valid Girl girl, BindingResult bindingResult){
+        if(bindingResult.hasErrors()){
+            //打印不满条件的提示信息
+            System.out.println(bindingResult.getFieldError().getDefaultMessage());
+            return null;
+        }
+        girl.setCupSize(girl.getCupSize());
+        girl.setAge(girl.getAge());
+        return girlRepository.save(girl);
     }
 }

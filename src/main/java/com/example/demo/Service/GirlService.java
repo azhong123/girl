@@ -1,12 +1,11 @@
-package com.example.demo;
+package com.example.demo.Service;
 
-import javassist.bytecode.stackmap.BasicBlock;
+import com.example.demo.Repository.GirlRepository;
+import com.example.demo.utill.Girl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.interceptor.NoRollbackRuleAttribute;
 
 import javax.transaction.Transactional;
-import java.beans.Transient;
 
 /**
  * 女生的业务逻辑层
@@ -19,7 +18,7 @@ public class GirlService {
     private GirlRepository girlRepository;
 
     @Transactional
-    public void saveGirlTwo() throws Exception{
+    public void saveGirlTwo() {
 
             Girl girlA = new Girl();
             girlA.setAge(20);
@@ -30,9 +29,6 @@ public class GirlService {
             girlB.setAge(20);
             girlB.setCupSize("B");
             girlRepository.save(girlB);
-
-        throw new RuntimeException("test");
-
         }
 
 }

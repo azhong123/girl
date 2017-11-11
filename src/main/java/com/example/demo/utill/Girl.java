@@ -1,6 +1,7 @@
-package com.example.demo;
+package com.example.demo.utill;
 
 import javax.persistence.*;
+import javax.validation.constraints.Min;
 
 /**
  * 女孩的实体类
@@ -15,6 +16,11 @@ public class Girl {
 
     private String cupSize;
 
+    /**
+     * 直接在属性上注解 并显示提示信息
+     * @Min(value = 18,message = "未成年禁止入内！")
+     */
+    @Min(value = 18,message = "未成年禁止入内！")
     private Integer age;
 
     public Integer getId() {
