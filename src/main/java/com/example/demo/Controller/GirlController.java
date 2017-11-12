@@ -2,7 +2,12 @@ package com.example.demo.Controller;
 
 import com.example.demo.Repository.GirlRepository;
 import com.example.demo.Service.GirlService;
-import com.example.demo.utill.Girl;
+import com.example.demo.domain.Girl;
+import com.example.demo.domain.Result;
+import com.example.demo.utill.ResultUtill;
+import com.sun.net.httpserver.Authenticator;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
@@ -18,6 +23,9 @@ import java.util.List;
 @RequestMapping(value = "/jap")
 public class GirlController {
 
+    //记录日志
+    private final static Logger LOGGER = LoggerFactory.getLogger(GirlController.class);
+
     @Autowired
     private GirlRepository girlRepository;
 
@@ -30,6 +38,7 @@ public class GirlController {
      */
     @GetMapping(value = "/girls")
     public List<Girl> findAllGirl(){
+        LOGGER.info("controller查询所有信息日志！！！！！！！！！");
         return girlRepository.findAll();
     }
 
@@ -112,14 +121,30 @@ public class GirlController {
      * @return
      */
     @PostMapping(value = "/savegirlvaild")
-    public Girl saveGirlValid(@Valid Girl girl, BindingResult bindingResult){
+    public Result<Girl> saveGirlValid(@Valid Girl girl, BindingResult bindingResult){
         if(bindingResult.hasErrors()){
             //打印不满条件的提示信息
-            System.out.println(bindingResult.getFieldError().getDefaultMessage());
-            return null;
+            return ResultUtill.error(1, bindingResult.getFieldError().getDefaultMessage());
         }
-        girl.setCupSize(girl.getCupSize());
-        girl.setAge(girl.getAge());
-        return girlRepository.save(girl);
+        Girl girlA = new Girl();
+        girlA.setCupSize(girl.getCupSize());
+        girlA.setAge(girl.getAge());
+        girlA.setMoney(girl.getMoney());
+        return ResultUtill.success(girlRepository.save(girlA));
+    }
+
+    /**
+     * 通过年龄的判断识别是否需要将信息展示出来
+     * age<14  ---> 女孩还在成长，请原谅
+     * 14< age< 20  ---> 未成年信息禁止查看
+     * 其实正常显示
+     * @param id
+     * @return
+     * @throws Exception
+     */
+    @PostMapping(value = "/findgirlbyage/{id}")
+    public Result<Girl> findGirlByAgeAndException(@PathVariable Integer id) throws Exception{
+
+        return ResultUtill.success(girlService.findGirlByAge(id));
     }
 }
